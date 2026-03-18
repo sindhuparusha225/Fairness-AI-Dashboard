@@ -1,22 +1,46 @@
 # FairnessAI Research Management Platform
 
-A full-stack web application for managing AI fairness research datasets, inspired by the paper:
+A full-stack system designed to **analyze, quantify, and visualize bias in AI models across demographic dimensions**.
 
-> **"Towards Measuring Fairness in AI: The Casual Conversations Dataset"**
-> Hazirbas et al. · IEEE TBIOM · Vol. 4, No. 3 · July 2022
+Inspired by *"Towards Measuring Fairness in AI: The Casual Conversations Dataset"*, this platform goes beyond dataset storage — it enables **structured fairness evaluation across age, gender, skin tone, and lighting conditions**, helping uncover hidden model biases.
+
+---
+
+## 🚀 Key Insight
+
+Most ML systems optimize for **overall accuracy**, ignoring how performance varies across different groups.
+
+This platform highlights that gap by:
+
+* Breaking down model performance **per demographic segment**
+* Exposing **false positive / false negative disparities**
+* Visualizing fairness issues using aggregated analytics
+
+👉 The goal: **Make bias visible, measurable, and actionable**
 
 ---
 
-## Features
+## ⚡ What Makes This Different
 
-- 🔐 Session-based authentication (register / login / logout)
-- 📊 Dashboard with live Chart.js analytics (age, gender, skin tone, lighting)
-- 🗄️ Full CRUD for datasets with file uploads (PDF + ZIP/CSV)
-- 🔬 Fairness Evaluation module (bias metrics across all 4 dimensions)
-- 👥 Admin researcher management with role control
-- 👤 Profile settings with avatar upload & password change
+* Not just dataset storage — **fairness-focused evaluation system**
+* Multi-dimensional bias tracking (**4 fairness axes**)
+* Real-time analytics using **MongoDB aggregation + Chart.js**
+* Structured evaluation pipeline aligned with research practices
 
 ---
+<img width="1898" height="1027" alt="Screenshot 2026-03-18 142630" src="https://github.com/user-attachments/assets/4f78464b-7c1a-41f4-935c-2ccd43c1ac74" />
+
+<img width="1915" height="1019" alt="Screenshot 2026-03-18 142700" src="https://github.com/user-attachments/assets/4fcc9816-86ef-43f8-a86f-f64cf9903919" />
+
+
+
+## 🧠 What This Demonstrates
+
+* Understanding of **AI fairness concepts**
+* Ability to design **data-driven evaluation systems**
+* Full-stack engineering (Node.js, MongoDB, EJS)
+* Translating research ideas → working product
+
 
 ## Quick Start
 
