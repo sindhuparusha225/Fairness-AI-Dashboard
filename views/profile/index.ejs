@@ -1,0 +1,162 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>My Profile</h1>
+    <div class="page-breadcrumb"><a href="/dashboard">Dashboard</a> › Profile</div>
+  </div>
+</div>
+
+<!-- Profile Header Banner -->
+<div class="profile-header">
+  <div class="profile-avatar">
+    <% if (profileUser.avatar) { %><img src="<%= profileUser.avatar %>" alt="avatar"><% } else { %><%= profileUser.name[0].toUpperCase() %><% } %>
+  </div>
+  <div>
+    <div class="profile-role-badge"><%= profileUser.role %></div>
+    <div class="profile-name"><%= profileUser.name %></div>
+    <div style="font-size:0.875rem;color:rgba(255,255,255,0.5);margin-top:4px;"><%= profileUser.email %></div>
+    <% if (profileUser.institution) { %><div style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-top:2px;">🏛 <%= profileUser.institution %></div><% } %>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:24px;text-align:center;">
+    <div><div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--teal);"><%= myDatasets.length %></div><div style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:2px;">Datasets</div></div>
+    <div><div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--amber);"><%= myEvaluations.length %></div><div style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:2px;">Analyses</div></div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs-container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="edit-profile">Edit Profile</button>
+    <button class="tab-btn" data-tab="change-password">Change Password</button>
+    <button class="tab-btn" data-tab="my-datasets">My Datasets</button>
+    <button class="tab-btn" data-tab="my-evaluations">My Evaluations</button>
+  </div>
+
+  <!-- Edit Profile Tab -->
+  <div class="tab-content active" data-tab-content="edit-profile">
+    <div style="max-width:600px;">
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Update Profile Information</h3></div>
+        <div class="card-body">
+          <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data" data-loading>
+            <div class="form-group">
+              <label class="form-label required" for="name">Full Name</label>
+              <input type="text" id="name" name="name" class="form-control" value="<%= profileUser.name %>" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label required" for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="form-control" value="<%= profileUser.email %>" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="institution">Institution</label>
+              <input type="text" id="institution" name="institution" class="form-control" value="<%= profileUser.institution || '' %>" placeholder="MIT, Stanford, etc.">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bio">Bio</label>
+              <textarea id="bio" name="bio" class="form-control" rows="3" placeholder="Brief research interests..."><%= profileUser.bio || '' %></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="avatar">Profile Picture</label>
+              <input type="file" id="avatar" name="avatar" class="form-control-file" accept="image/*">
+              <% if (profileUser.avatar) { %>
+                <div style="margin-top:8px;display:flex;align-items:center;gap:10px;">
+                  <img src="<%= profileUser.avatar %>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" alt="current avatar">
+                  <span class="form-hint">Current avatar · Upload new to replace</span>
+                </div>
+              <% } %>
+            </div>
+            <button type="submit" class="btn btn-teal">💾 Save Profile</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Tab -->
+  <div class="tab-content" data-tab-content="change-password">
+    <div style="max-width:480px;">
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Change Password</h3></div>
+        <div class="card-body">
+          <form action="/profile/password?_method=PUT" method="POST" data-loading>
+            <div class="form-group">
+              <label class="form-label required" for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" class="form-control" required autocomplete="current-password">
+            </div>
+            <div class="form-group">
+              <label class="form-label required" for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" class="form-control" required autocomplete="new-password">
+              <div class="form-hint">Minimum 6 characters</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label required" for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-primary">🔐 Update Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Datasets Tab -->
+  <div class="tab-content" data-tab-content="my-datasets">
+    <% if (myDatasets.length > 0) { %>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr><th>Title</th><th>Year</th><th>Size</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <% myDatasets.forEach(ds => { %>
+              <tr>
+                <td><div class="table-title"><a href="/datasets/<%= ds._id %>"><%= ds.title.substring(0,50) %><%= ds.title.length>50?'…':'' %></a></div></td>
+                <td class="font-mono" style="font-size:0.82rem;"><%= ds.publicationYear %></td>
+                <td class="font-mono" style="font-size:0.82rem;"><%= ds.datasetSize.toLocaleString() %></td>
+                <td><span class="badge badge-<%= ds.status==='active'?'active':ds.status==='archived'?'archived':'review' %>"><%= ds.status %></span></td>
+                <td style="font-size:0.78rem;color:var(--text-light);font-family:'DM Mono',monospace;"><%= new Date(ds.createdAt).toLocaleDateString() %></td>
+                <td style="display:flex;gap:6px;">
+                  <a href="/datasets/<%= ds._id %>/edit" class="btn btn-outline btn-sm">Edit</a>
+                  <form action="/datasets/<%= ds._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm" data-confirm="Delete this dataset?">Del</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="empty-state"><div class="empty-icon">🗄️</div><div class="empty-title">No datasets uploaded yet</div><a href="/datasets/new" class="btn btn-teal btn-sm" style="margin-top:12px;">Upload First Dataset</a></div>
+    <% } %>
+  </div>
+
+  <!-- My Evaluations Tab -->
+  <div class="tab-content" data-tab-content="my-evaluations">
+    <% if (myEvaluations.length > 0) { %>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr><th>Model</th><th>Dataset</th><th>Overall Acc.</th><th>Status</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            <% myEvaluations.forEach(ev => { %>
+              <tr>
+                <td><div class="table-title"><%= ev.modelName %></div><div class="table-sub"><%= ev.title %></div></td>
+                <td style="font-size:0.82rem;"><%= ev.dataset ? ev.dataset.title.substring(0,35)+'…' : '—' %></td>
+                <td style="font-family:'DM Mono',monospace;font-size:0.9rem;color:var(--teal-dim);font-weight:600;"><%= ev.overallAccuracy.toFixed(1) %>%</td>
+                <td><span class="badge badge-<%= ev.status %>"><%= ev.status %></span></td>
+                <td style="font-size:0.78rem;color:var(--text-light);font-family:'DM Mono',monospace;"><%= new Date(ev.createdAt).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="empty-state"><div class="empty-icon">🔬</div><div class="empty-title">No evaluations performed yet</div></div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/layout_end') %>

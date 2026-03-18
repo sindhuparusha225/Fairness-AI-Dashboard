@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — FairnessAI Research Platform</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-brand-icon">⚖️</div>
+      <div>
+        <div class="auth-brand-text">FairnessAI</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;">Research Platform</div>
+      </div>
+    </div>
+
+    <h2 class="auth-headline">
+      Measuring<br><em>Fairness</em><br>in AI Systems
+    </h2>
+    <p class="auth-subtext">
+      A comprehensive research management platform for evaluating AI model bias across age, gender, skin tone, and lighting conditions — inspired by the Casual Conversations dataset.
+    </p>
+
+    <div class="auth-stats">
+      <div class="auth-stat-item">
+        <span class="auth-stat-val">45K+</span>
+        <div class="auth-stat-lbl">Videos</div>
+      </div>
+      <div class="auth-stat-item">
+        <span class="auth-stat-val">3,011</span>
+        <div class="auth-stat-lbl">Subjects</div>
+      </div>
+      <div class="auth-stat-item">
+        <span class="auth-stat-val">4D</span>
+        <div class="auth-stat-lbl">Attributes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <h2 class="auth-form-title">Welcome back</h2>
+    <p class="auth-form-sub">Sign in to your research account</p>
+
+    <div style="margin-bottom: 20px;">
+      <%- include('../partials/flash') %>
+    </div>
+
+    <form action="/auth/login" method="POST" data-loading>
+      <div class="form-group">
+        <label class="form-label required" for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="researcher@university.edu"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required" for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter your password"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top: 8px;">
+        Sign In →
+      </button>
+    </form>
+
+    <div class="auth-link">
+      Don't have an account?
+      <a href="/auth/register" style="color: var(--teal-dim); font-weight: 500;">Create one</a>
+    </div>
+
+    <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);">
+      <p style="font-size: 0.75rem; color: var(--text-light); text-align: center; line-height: 1.6;">
+        For demonstration, create an account or use existing credentials.<br>
+        All uploaded data is stored securely.
+      </p>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

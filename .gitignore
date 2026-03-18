@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+
+# Uploads
+public/uploads/papers/*
+public/uploads/datasets/*
+!public/uploads/papers/.gitkeep
+!public/uploads/datasets/.gitkeep
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Misc
+*.tmp
+*.swp

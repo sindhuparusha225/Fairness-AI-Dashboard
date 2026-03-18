@@ -1,0 +1,103 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Researcher Management</h1>
+    <div class="page-breadcrumb"><a href="/dashboard">Dashboard</a> › Researchers</div>
+  </div>
+  <span class="badge badge-admin" style="padding:6px 14px;font-size:0.78rem;">Admin Only</span>
+</div>
+
+<!-- Summary cards -->
+<div class="stats-grid" style="margin-bottom:24px;">
+  <div class="stat-card teal">
+    <div class="stat-icon">👥</div>
+    <div class="stat-value"><%= users.filter(u=>u.isActive).length %></div>
+    <div class="stat-label">Active Researchers</div>
+  </div>
+  <div class="stat-card ink">
+    <div class="stat-icon">🛡️</div>
+    <div class="stat-value"><%= users.filter(u=>u.role==='admin').length %></div>
+    <div class="stat-label">Administrators</div>
+  </div>
+  <div class="stat-card amber">
+    <div class="stat-icon">🗄️</div>
+    <div class="stat-value"><%= users.reduce((s,u)=>s+u.datasetsUploaded,0) %></div>
+    <div class="stat-label">Total Uploads</div>
+  </div>
+  <div class="stat-card rose">
+    <div class="stat-icon">🔬</div>
+    <div class="stat-value"><%= users.reduce((s,u)=>s+u.analysesPerformed,0) %></div>
+    <div class="stat-label">Total Analyses</div>
+  </div>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Researcher</th>
+        <th>Role</th>
+        <th>Institution</th>
+        <th>Uploads</th>
+        <th>Analyses</th>
+        <th>Last Login</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--ink-mid));display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;color:#fff;flex-shrink:0;overflow:hidden;">
+                <% if (u.avatar) { %><img src="<%= u.avatar %>" style="width:100%;height:100%;object-fit:cover;" alt=""><% } else { %><%= u.name[0].toUpperCase() %><% } %>
+              </div>
+              <div>
+                <div style="font-weight:500;font-size:0.875rem;">
+                  <a href="/users/<%= u._id %>" style="color:var(--ink);"><%= u.name %></a>
+                  <% if (u._id.toString() === session.userId) { %><span style="font-size:0.7rem;color:var(--teal-dim);margin-left:4px;">(you)</span><% } %>
+                </div>
+                <div style="font-size:0.77rem;color:var(--text-light);"><%= u.email %></div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+          <td style="font-size:0.82rem;color:var(--text-mid);"><%= u.institution || '—' %></td>
+          <td style="font-family:'DM Mono',monospace;font-size:0.82rem;"><%= u.datasetsUploaded %></td>
+          <td style="font-family:'DM Mono',monospace;font-size:0.82rem;"><%= u.analysesPerformed %></td>
+          <td style="font-size:0.78rem;color:var(--text-light);font-family:'DM Mono',monospace;">
+            <%= u.lastLogin ? new Date(u.lastLogin).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Never' %>
+          </td>
+          <td>
+            <span class="badge" style="background:<%= u.isActive ? 'rgba(0,201,167,0.12)' : 'rgba(231,111,81,0.1)' %>;color:<%= u.isActive ? '#00735e' : 'var(--rose)' %>;">
+              <%= u.isActive ? 'Active' : 'Inactive' %>
+            </span>
+          </td>
+          <td>
+            <% if (u._id.toString() !== session.userId) { %>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <form action="/users/<%= u._id %>/role?_method=PUT" method="POST" style="display:inline;">
+                  <select name="role" onchange="this.form.submit()" class="form-control" style="padding:5px 8px;font-size:0.78rem;width:auto;height:auto;">
+                    <option value="researcher" <%= u.role==='researcher'?'selected':'' %>>Researcher</option>
+                    <option value="admin" <%= u.role==='admin'?'selected':'' %>>Admin</option>
+                  </select>
+                </form>
+                <form action="/users/<%= u._id %>?_method=DELETE" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm" data-confirm="Deactivate <%= u.name %>'s account?">
+                    <%= u.isActive ? 'Deactivate' : 'Deactivated' %>
+                  </button>
+                </form>
+              </div>
+            <% } else { %>
+              <span style="font-size:0.78rem;color:var(--text-light);">Current user</span>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/layout_end') %>

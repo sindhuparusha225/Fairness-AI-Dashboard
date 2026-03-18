@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — FairnessAI Research Platform</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-brand-icon">⚖️</div>
+      <div>
+        <div class="auth-brand-text">FairnessAI</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;">Research Platform</div>
+      </div>
+    </div>
+
+    <h2 class="auth-headline">
+      Join the<br><em>Research</em><br>Community
+    </h2>
+    <p class="auth-subtext">
+      Upload datasets, run fairness evaluations, and collaborate with researchers working to build more equitable AI systems.
+    </p>
+
+    <div class="auth-stats">
+      <div class="auth-stat-item">
+        <span class="auth-stat-val">Age</span>
+        <div class="auth-stat-lbl">Dimension</div>
+      </div>
+      <div class="auth-stat-item">
+        <span class="auth-stat-val">6</span>
+        <div class="auth-stat-lbl">Skin Types</div>
+      </div>
+      <div class="auth-stat-item">
+        <span class="auth-stat-val">2</span>
+        <div class="auth-stat-lbl">Lighting</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right" style="overflow-y: auto; padding: 40px 48px;">
+    <h2 class="auth-form-title">Create account</h2>
+    <p class="auth-form-sub">Start your fairness research journey</p>
+
+    <div style="margin-bottom: 16px;">
+      <%- include('../partials/flash') %>
+    </div>
+
+    <form action="/auth/register" method="POST" data-loading>
+      <div class="form-group">
+        <label class="form-label required" for="name">Full Name</label>
+        <input type="text" id="name" name="name" class="form-control"
+          placeholder="Dr. Jane Smith" required autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required" for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-control"
+          placeholder="jane@university.edu" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="institution">Institution</label>
+        <input type="text" id="institution" name="institution" class="form-control"
+          placeholder="MIT, Stanford, etc.">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required" for="role">Role</label>
+        <select id="role" name="role" class="form-control" required>
+          <option value="researcher" selected>Researcher</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label required" for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control"
+            placeholder="Min. 6 characters" required autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label class="form-label required" for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+            placeholder="Repeat password" required autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="bio">Bio (Optional)</label>
+        <textarea id="bio" name="bio" class="form-control" rows="2"
+          placeholder="Brief research interests..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-teal btn-full btn-lg">
+        Create Account →
+      </button>
+    </form>
+
+    <div class="auth-link">
+      Already have an account?
+      <a href="/auth/login" style="color: var(--teal-dim); font-weight: 500;">Sign in</a>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

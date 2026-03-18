@@ -1,0 +1,62 @@
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <a href="/dashboard" class="brand-logo">
+      <div class="brand-icon">⚖️</div>
+      <div>
+        <div>FairnessAI</div>
+        <div class="brand-sub">Research Platform</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+
+    <a href="/dashboard" class="nav-item <%= currentPath === '/dashboard' || currentPath.startsWith('/dashboard') ? 'active' : '' %>">
+      <span class="nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="/datasets" class="nav-item <%= currentPath.startsWith('/datasets') ? 'active' : '' %>">
+      <span class="nav-icon">🗄️</span>
+      <span>Datasets</span>
+    </a>
+
+    <div class="nav-section-label">Analysis</div>
+
+    <a href="/datasets/new" class="nav-item <%= currentPath === '/datasets/new' ? 'active' : '' %>">
+      <span class="nav-icon">➕</span>
+      <span>Upload Dataset</span>
+    </a>
+
+    <% if (session && session.userRole === 'admin') { %>
+    <div class="nav-section-label">Admin</div>
+    <a href="/users" class="nav-item <%= currentPath.startsWith('/users') ? 'active' : '' %>">
+      <span class="nav-icon">👥</span>
+      <span>Researchers</span>
+    </a>
+    <% } %>
+
+    <div class="nav-section-label">Account</div>
+    <a href="/profile" class="nav-item <%= currentPath.startsWith('/profile') ? 'active' : '' %>">
+      <span class="nav-icon">👤</span>
+      <span>My Profile</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">
+        <% if (session && session.userAvatar) { %>
+          <img src="<%= session.userAvatar %>" alt="avatar">
+        <% } else { %>
+          <%= session && session.userName ? session.userName[0].toUpperCase() : 'U' %>
+        <% } %>
+      </div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name truncate"><%= session && session.userName ? session.userName : 'User' %></div>
+        <div class="sidebar-user-role"><%= session && session.userRole ? session.userRole : 'researcher' %></div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,124 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Datasets</h1>
+    <div class="page-breadcrumb">
+      <a href="/dashboard">Dashboard</a> <span>›</span> <span>Datasets</span>
+    </div>
+  </div>
+  <a href="/datasets/new" class="btn btn-teal">
+    <span>+</span> Upload Dataset
+  </a>
+</div>
+
+<!-- Search & Filters -->
+<form method="GET" action="/datasets" class="search-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input
+      type="text"
+      name="search"
+      class="form-control"
+      placeholder="Search by title, authors, abstract..."
+      value="<%= search %>"
+    >
+  </div>
+  <select name="status" class="form-control" style="width: auto; min-width: 140px;">
+    <option value="">All Status</option>
+    <option value="active" <%= statusFilter === 'active' ? 'selected' : '' %>>Active</option>
+    <option value="archived" <%= statusFilter === 'archived' ? 'selected' : '' %>>Archived</option>
+    <option value="under_review" <%= statusFilter === 'under_review' ? 'selected' : '' %>>Under Review</option>
+  </select>
+  <input type="number" name="year" class="form-control" placeholder="Year"
+    style="width: 100px;" value="<%= yearFilter %>">
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <% if (search || statusFilter || yearFilter) { %>
+    <a href="/datasets" class="btn btn-outline">Clear</a>
+  <% } %>
+</form>
+
+<!-- Datasets Table -->
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title & Authors</th>
+        <th>Year</th>
+        <th>Size</th>
+        <th>Skin Tones</th>
+        <th>Status</th>
+        <th>Uploaded By</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (datasets.length > 0) { %>
+        <% datasets.forEach(ds => { %>
+          <tr>
+            <td>
+              <div class="table-title">
+                <a href="/datasets/<%= ds._id %>">
+                  <%= ds.title.length > 50 ? ds.title.substring(0, 50) + '…' : ds.title %>
+                </a>
+              </div>
+              <div class="table-sub"><%= ds.authors.length > 45 ? ds.authors.substring(0, 45) + '…' : ds.authors %></div>
+            </td>
+            <td><span class="font-mono" style="font-size:0.82rem;"><%= ds.publicationYear %></span></td>
+            <td><span class="font-mono" style="font-size:0.82rem;"><%= ds.datasetSize.toLocaleString() %></span></td>
+            <td>
+              <div class="skin-swatches">
+                <% if (ds.skinToneDistribution.typeI > 0) { %><span class="skin-dot skin-I" title="Type I: <%= ds.skinToneDistribution.typeI %>%"></span><% } %>
+                <% if (ds.skinToneDistribution.typeII > 0) { %><span class="skin-dot skin-II" title="Type II: <%= ds.skinToneDistribution.typeII %>%"></span><% } %>
+                <% if (ds.skinToneDistribution.typeIII > 0) { %><span class="skin-dot skin-III" title="Type III: <%= ds.skinToneDistribution.typeIII %>%"></span><% } %>
+                <% if (ds.skinToneDistribution.typeIV > 0) { %><span class="skin-dot skin-IV" title="Type IV: <%= ds.skinToneDistribution.typeIV %>%"></span><% } %>
+                <% if (ds.skinToneDistribution.typeV > 0) { %><span class="skin-dot skin-V" title="Type V: <%= ds.skinToneDistribution.typeV %>%"></span><% } %>
+                <% if (ds.skinToneDistribution.typeVI > 0) { %><span class="skin-dot skin-VI" title="Type VI: <%= ds.skinToneDistribution.typeVI %>%"></span><% } %>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-<%= ds.status === 'active' ? 'active' : ds.status === 'archived' ? 'archived' : 'review' %>">
+                <%= ds.status.replace('_', ' ') %>
+              </span>
+            </td>
+            <td style="font-size:0.82rem;"><%= ds.uploadedBy ? ds.uploadedBy.name : '—' %></td>
+            <td style="font-size:0.78rem; color:var(--text-light); font-family:'DM Mono',monospace;">
+              <%= new Date(ds.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+            </td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <a href="/datasets/<%= ds._id %>" class="btn btn-outline btn-sm">View</a>
+                <% if (session.userRole === 'admin' || (ds.uploadedBy && ds.uploadedBy._id && ds.uploadedBy._id.toString() === session.userId)) { %>
+                  <a href="/datasets/<%= ds._id %>/edit" class="btn btn-outline btn-sm">Edit</a>
+                  <form action="/datasets/<%= ds._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                      data-confirm="Delete '<%= ds.title %>'? This cannot be undone.">
+                      Del
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <div class="empty-icon">🗄️</div>
+              <div class="empty-title">No datasets found</div>
+              <p>Try adjusting your search filters or <a href="/datasets/new">upload a new dataset</a>.</p>
+            </div>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-light); font-family: 'DM Mono', monospace;">
+  <%= datasets.length %> dataset<%= datasets.length !== 1 ? 's' : '' %> found
+</div>
+
+<%- include('../partials/layout_end') %>

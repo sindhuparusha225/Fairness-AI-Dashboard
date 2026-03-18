@@ -1,0 +1,185 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><%= dataset.title.length > 60 ? dataset.title.substring(0,60)+'…' : dataset.title %></h1>
+    <div class="page-breadcrumb">
+      <a href="/dashboard">Dashboard</a> › <a href="/datasets">Datasets</a> › View
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a href="/datasets/<%= dataset._id %>/evaluations/new" class="btn btn-teal btn-sm">+ Add Evaluation</a>
+    <% if (session.userRole === 'admin' || (dataset.uploadedBy && dataset.uploadedBy._id && dataset.uploadedBy._id.toString() === session.userId)) { %>
+      <a href="/datasets/<%= dataset._id %>/edit" class="btn btn-outline btn-sm">Edit</a>
+      <form action="/datasets/<%= dataset._id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger btn-sm" data-confirm="Delete this dataset permanently?">Delete</button>
+      </form>
+    <% } %>
+    <a href="/datasets" class="btn btn-outline btn-sm">← Back</a>
+  </div>
+</div>
+
+<div class="two-col-grid" style="margin-bottom:20px;">
+  <!-- Left: Details -->
+  <div>
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <span class="badge badge-<%= dataset.status === 'active' ? 'active' : dataset.status === 'archived' ? 'archived' : 'review' %>">
+            <%= dataset.status.replace('_',' ') %>
+          </span>
+          <span class="font-mono" style="font-size:0.78rem;color:var(--text-light);"><%= dataset.publicationYear %></span>
+          <span style="font-size:0.78rem;color:var(--text-light);">·</span>
+          <span class="font-mono" style="font-size:0.78rem;color:var(--teal-dim);"><%= dataset.datasetSize.toLocaleString() %> samples</span>
+        </div>
+        <div style="font-size:0.9rem;color:var(--text-mid);margin-bottom:14px;font-style:italic;"><%= dataset.authors %></div>
+        <p style="font-size:0.875rem;color:var(--text-main);line-height:1.75;"><%= dataset.abstract %></p>
+        <% if (dataset.tags && dataset.tags.length > 0) { %>
+          <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+            <% dataset.tags.forEach(tag => { %>
+              <span style="padding:3px 10px;background:var(--paper-warm);border-radius:20px;font-size:0.75rem;color:var(--text-mid);font-family:'DM Mono',monospace;">#<%= tag %></span>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title">Files & Downloads</h3></div>
+      <div class="card-body">
+        <% if (dataset.paperFile) { %>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--paper);border-radius:8px;margin-bottom:10px;">
+            <span style="font-size:1.5rem;">📄</span>
+            <div style="flex:1;">
+              <div style="font-size:0.875rem;font-weight:500;">Research Paper</div>
+              <div style="font-size:0.77rem;color:var(--text-light);">PDF Document</div>
+            </div>
+            <a href="<%= dataset.paperFile %>" target="_blank" class="btn btn-outline btn-sm">Download</a>
+          </div>
+        <% } %>
+        <% if (dataset.datasetFile) { %>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--paper);border-radius:8px;">
+            <span style="font-size:1.5rem;">🗄️</span>
+            <div style="flex:1;">
+              <div style="font-size:0.875rem;font-weight:500;">Dataset File</div>
+              <div style="font-size:0.77rem;color:var(--text-light);">ZIP / CSV / JSON</div>
+            </div>
+            <a href="<%= dataset.datasetFile %>" target="_blank" class="btn btn-outline btn-sm">Download</a>
+          </div>
+        <% } %>
+        <% if (!dataset.paperFile && !dataset.datasetFile) { %>
+          <p style="color:var(--text-light);font-size:0.875rem;">No files attached.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Distributions -->
+  <div>
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header"><h3 class="card-title">📊 Fairness Distributions</h3></div>
+      <div class="card-body">
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:8px;">Age Groups</div>
+          <div class="dist-bar-row"><span class="dist-bar-label">18–30</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.ageDistribution.age18_30 %>%;background:var(--teal);"></div></div><span class="dist-bar-val"><%= dataset.ageDistribution.age18_30 %>%</span></div>
+          <div class="dist-bar-row"><span class="dist-bar-label">31–45</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.ageDistribution.age31_45 %>%;background:var(--teal-dim);"></div></div><span class="dist-bar-val"><%= dataset.ageDistribution.age31_45 %>%</span></div>
+          <div class="dist-bar-row"><span class="dist-bar-label">46–85</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.ageDistribution.age46_85 %>%;background:var(--ink-light);"></div></div><span class="dist-bar-val"><%= dataset.ageDistribution.age46_85 %>%</span></div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:8px;">Gender</div>
+          <div class="dist-bar-row"><span class="dist-bar-label">Male</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.genderDistribution.male %>%;background:var(--ink);"></div></div><span class="dist-bar-val"><%= dataset.genderDistribution.male %>%</span></div>
+          <div class="dist-bar-row"><span class="dist-bar-label">Female</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.genderDistribution.female %>%;background:var(--teal);"></div></div><span class="dist-bar-val"><%= dataset.genderDistribution.female %>%</span></div>
+          <div class="dist-bar-row"><span class="dist-bar-label">Other</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.genderDistribution.other %>%;background:var(--amber);"></div></div><span class="dist-bar-val"><%= dataset.genderDistribution.other %>%</span></div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:8px;">Fitzpatrick Skin Tone</div>
+          <% const skinColors = ['#f6ede4','#e8c9a5','#c8924a','#a0622a','#6b3c1a','#2d1506'];
+             const skinKeys = ['typeI','typeII','typeIII','typeIV','typeV','typeVI'];
+             const skinLabels = ['Type I','Type II','Type III','Type IV','Type V','Type VI'];
+             skinKeys.forEach((k,i) => { %>
+            <div class="dist-bar-row">
+              <span class="dist-bar-label" style="display:flex;align-items:center;gap:5px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:<%= skinColors[i] %>;border:1px solid rgba(0,0,0,0.1);flex-shrink:0;"></span>
+                <%= skinLabels[i] %>
+              </span>
+              <div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.skinToneDistribution[k] %>%;background:<%= skinColors[i] %>;border:1px solid rgba(0,0,0,0.06);"></div></div>
+              <span class="dist-bar-val"><%= dataset.skinToneDistribution[k] %>%</span>
+            </div>
+          <% }) %>
+        </div>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:8px;">Lighting</div>
+          <div class="dist-bar-row"><span class="dist-bar-label">☀️ Bright</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.lightingCondition.bright %>%;background:var(--amber);"></div></div><span class="dist-bar-val"><%= dataset.lightingCondition.bright %>%</span></div>
+          <div class="dist-bar-row"><span class="dist-bar-label">🌑 Dark</span><div class="dist-bar-track"><div class="dist-bar-fill" style="width:<%= dataset.lightingCondition.dark %>%;background:var(--ink);"></div></div><span class="dist-bar-val"><%= dataset.lightingCondition.dark %>%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="font-size:0.82rem;color:var(--text-mid);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Uploaded by</span><strong style="color:var(--ink);"><%= dataset.uploadedBy ? dataset.uploadedBy.name : '—' %></strong></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Institution</span><span><%= dataset.uploadedBy && dataset.uploadedBy.institution ? dataset.uploadedBy.institution : '—' %></span></div>
+        <div style="display:flex;justify-content:space-between;"><span>Created</span><span class="font-mono"><%= new Date(dataset.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) %></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Evaluations -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">🔬 Fairness Evaluations (<%= evaluations.length %>)</h3>
+    <a href="/datasets/<%= dataset._id %>/evaluations/new" class="btn btn-teal btn-sm">+ Add Evaluation</a>
+  </div>
+  <div class="card-body" style="padding:0;">
+    <% if (evaluations.length > 0) { %>
+      <% evaluations.forEach(ev => { %>
+        <div style="padding:20px;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+            <div style="flex:1;">
+              <div style="font-weight:600;color:var(--ink);font-size:0.95rem;margin-bottom:2px;"><%= ev.modelName %></div>
+              <div style="font-size:0.8rem;color:var(--text-light);margin-bottom:8px;"><%= ev.title %> · <%= ev.evaluatedBy ? ev.evaluatedBy.name : '—' %></div>
+              <% if (ev.description) { %><p style="font-size:0.82rem;color:var(--text-mid);"><%= ev.description %></p><% } %>
+            </div>
+            <div style="text-align:center;flex-shrink:0;">
+              <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--teal);line-height:1;"><%= ev.overallAccuracy.toFixed(1) %>%</div>
+              <div style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;color:var(--text-light);margin-top:2px;">Overall Acc.</div>
+            </div>
+          </div>
+          <!-- Mini metrics grid -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:14px;">
+            <div style="padding:10px;background:var(--paper);border-radius:8px;font-size:0.78rem;">
+              <div style="color:var(--text-light);margin-bottom:4px;font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;">Skin Type V & VI</div>
+              <div style="font-weight:600;color:<%= ((ev.skinToneMetrics.typeV.accuracy + ev.skinToneMetrics.typeVI.accuracy)/2) < 70 ? 'var(--rose)' : 'var(--teal-dim)' %>;">
+                <%= (((ev.skinToneMetrics.typeV.accuracy||0) + (ev.skinToneMetrics.typeVI.accuracy||0))/2).toFixed(1) %>%
+              </div>
+            </div>
+            <div style="padding:10px;background:var(--paper);border-radius:8px;font-size:0.78rem;">
+              <div style="color:var(--text-light);margin-bottom:4px;font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;">Gender Gap</div>
+              <div style="font-weight:600;color:var(--ink);">
+                Δ<%= Math.abs((ev.genderMetrics.male.accuracy||0) - (ev.genderMetrics.female.accuracy||0)).toFixed(1) %>%
+              </div>
+            </div>
+            <div style="padding:10px;background:var(--paper);border-radius:8px;font-size:0.78rem;">
+              <div style="color:var(--text-light);margin-bottom:4px;font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;">Dark Lighting</div>
+              <div style="font-weight:600;color:var(--ink);"><%= (ev.lightingMetrics.dark.accuracy||0).toFixed(1) %>%</div>
+            </div>
+            <div style="padding:10px;background:var(--paper);border-radius:8px;font-size:0.78rem;">
+              <div style="color:var(--text-light);margin-bottom:4px;font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;">Age 46–85</div>
+              <div style="font-weight:600;color:var(--ink);"><%= (ev.ageMetrics.age46_85.accuracy||0).toFixed(1) %>%</div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-icon">🔬</div>
+        <div class="empty-title">No evaluations yet</div>
+        <p>Be the first to run a fairness evaluation on this dataset.</p>
+        <a href="/datasets/<%= dataset._id %>/evaluations/new" class="btn btn-teal btn-sm" style="margin-top:12px;">Add Evaluation</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/layout_end') %>

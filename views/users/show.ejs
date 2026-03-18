@@ -1,0 +1,74 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><%= targetUser.name %></h1>
+    <div class="page-breadcrumb"><a href="/dashboard">Dashboard</a> › <a href="/users">Researchers</a> › Activity Log</div>
+  </div>
+  <a href="/users" class="btn btn-outline">← Back</a>
+</div>
+
+<!-- Profile header -->
+<div class="profile-header" style="margin-bottom:24px;">
+  <div class="profile-avatar">
+    <% if (targetUser.avatar) { %><img src="<%= targetUser.avatar %>" alt=""><% } else { %><%= targetUser.name[0].toUpperCase() %><% } %>
+  </div>
+  <div>
+    <div class="profile-role-badge"><%= targetUser.role %></div>
+    <div class="profile-name"><%= targetUser.name %></div>
+    <div style="font-size:0.875rem;color:rgba(255,255,255,0.55);margin-top:4px;"><%= targetUser.email %></div>
+    <% if (targetUser.institution) { %><div style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-top:2px;">🏛 <%= targetUser.institution %></div><% } %>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:20px;text-align:center;">
+    <div><div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--teal);"><%= targetUser.datasetsUploaded %></div><div style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:2px;">Datasets</div></div>
+    <div><div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--amber);"><%= targetUser.analysesPerformed %></div><div style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:2px;">Analyses</div></div>
+    <div><div style="font-family:'DM Serif Display',serif;font-size:0.95rem;color:rgba(255,255,255,0.6);">Last Login</div><div style="font-family:'DM Mono',monospace;font-size:0.78rem;color:rgba(255,255,255,0.4);margin-top:2px;"><%= targetUser.lastLogin ? new Date(targetUser.lastLogin).toLocaleDateString() : 'Never' %></div></div>
+  </div>
+</div>
+
+<div class="two-col-grid">
+  <!-- Datasets -->
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Uploaded Datasets (<%= datasets.length %>)</h3></div>
+    <div style="padding:0;">
+      <% if (datasets.length > 0) { %>
+        <% datasets.forEach(ds => { %>
+          <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-weight:500;font-size:0.875rem;"><a href="/datasets/<%= ds._id %>" style="color:var(--ink);"><%= ds.title.substring(0,40) %><%= ds.title.length>40?'…':'' %></a></div>
+              <div style="font-size:0.77rem;color:var(--text-light);"><%= ds.publicationYear %> · <%= ds.datasetSize.toLocaleString() %> samples</div>
+            </div>
+            <span class="badge badge-<%= ds.status==='active'?'active':ds.status==='archived'?'archived':'review' %>"><%= ds.status %></span>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state" style="padding:30px;"><div class="empty-icon">🗄️</div><div class="empty-title">No datasets uploaded</div></div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Evaluations -->
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Evaluations Performed (<%= evaluations.length %>)</h3></div>
+    <div style="padding:0;">
+      <% if (evaluations.length > 0) { %>
+        <% evaluations.forEach(ev => { %>
+          <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-weight:500;font-size:0.875rem;"><%= ev.modelName %></div>
+              <div style="font-size:0.77rem;color:var(--text-light);"><%= ev.dataset ? ev.dataset.title.substring(0,35)+'…' : 'Dataset' %></div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--teal-dim);"><%= ev.overallAccuracy.toFixed(1) %>%</div>
+              <span class="badge badge-<%= ev.status %>"><%= ev.status %></span>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state" style="padding:30px;"><div class="empty-icon">🔬</div><div class="empty-title">No evaluations performed</div></div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/layout_end') %>

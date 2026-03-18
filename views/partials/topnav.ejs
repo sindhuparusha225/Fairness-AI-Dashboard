@@ -1,0 +1,18 @@
+<header class="topnav">
+  <div class="topnav-left">
+    <h1 class="page-title"><%= title %></h1>
+  </div>
+  <div class="topnav-right">
+    <% if (session && session.userName) { %>
+      <span style="font-size:0.82rem; color:var(--text-mid);">
+        <span style="color:var(--text-light);">Hello,</span>
+        <strong><%= session.userName %></strong>
+      </span>
+    <% } %>
+    <form action="/auth/logout" method="POST" style="margin:0;">
+      <button type="submit" class="btn-nav-logout">
+        <span>↩</span> Logout
+      </button>
+    </form>
+  </div>
+</header>

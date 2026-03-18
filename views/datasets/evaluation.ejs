@@ -1,0 +1,162 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Add Fairness Evaluation</h1>
+    <div class="page-breadcrumb">
+      <a href="/datasets">Datasets</a> › <a href="/datasets/<%= dataset._id %>"><%= dataset.title.substring(0,30) %>…</a> › Evaluation
+    </div>
+  </div>
+  <a href="/datasets/<%= dataset._id %>" class="btn btn-outline">← Back</a>
+</div>
+
+<div style="max-width:860px;">
+  <div style="padding:14px 18px;background:rgba(0,201,167,0.07);border:1px solid var(--border-teal);border-radius:var(--radius);margin-bottom:20px;font-size:0.875rem;color:var(--text-mid);">
+    Evaluating: <strong style="color:var(--ink);"><%= dataset.title %></strong>
+  </div>
+
+  <form action="/datasets/<%= dataset._id %>/evaluations" method="POST" data-loading>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-body">
+        <div class="form-section-title">🔬 Model Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label required" for="title">Evaluation Title</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="e.g., ResNet-50 Fairness Audit" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required" for="modelName">Model Name</label>
+            <input type="text" id="modelName" name="modelName" class="form-control" placeholder="e.g., NTechLab Deepfake Detector" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="description">Description</label>
+          <textarea id="description" name="description" class="form-control" rows="2" placeholder="Brief description of the evaluation methodology..."></textarea>
+        </div>
+        <div class="form-group" style="max-width:200px;">
+          <label class="form-label required" for="overallAccuracy">Overall Accuracy (%)</label>
+          <input type="number" id="overallAccuracy" name="overallAccuracy" class="form-control" placeholder="70.0" min="0" max="100" step="0.1" required data-percent>
+        </div>
+      </div>
+    </div>
+
+    <!-- Age Metrics -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-body">
+        <div class="form-section-title">👴 Metrics by Age Group</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.875rem;">
+            <thead>
+              <tr style="background:var(--paper);">
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">Group</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">Accuracy (%)</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">False Positive Rate (%)</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">False Negative Rate (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% [['18–30','ageAcc18_30','ageFpr18_30','ageFnr18_30'],['31–45','ageAcc31_45','ageFpr31_45','ageFnr31_45'],['46–85','ageAcc46_85','ageFpr46_85','ageFnr46_85']].forEach(row => { %>
+              <tr style="border-top:1px solid var(--border);">
+                <td style="padding:10px 12px;font-weight:500;"><%= row[0] %></td>
+                <td style="padding:10px 12px;"><input type="number" name="<%= row[1] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+                <td style="padding:10px 12px;"><input type="number" name="<%= row[2] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+                <td style="padding:10px 12px;"><input type="number" name="<%= row[3] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gender Metrics -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-body">
+        <div class="form-section-title">⚥ Metrics by Gender</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.875rem;">
+            <thead>
+              <tr style="background:var(--paper);">
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">Group</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">Accuracy (%)</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">False Positive Rate (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% [['Male','genderAccMale','genderFprMale'],['Female','genderAccFemale','genderFprFemale'],['Other','genderAccOther','genderFprOther']].forEach(row => { %>
+              <tr style="border-top:1px solid var(--border);">
+                <td style="padding:10px 12px;font-weight:500;"><%= row[0] %></td>
+                <td style="padding:10px 12px;"><input type="number" name="<%= row[1] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+                <td style="padding:10px 12px;"><input type="number" name="<%= row[2] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skin Tone Metrics -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-body">
+        <div class="form-section-title">🎨 Metrics by Fitzpatrick Skin Tone</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.875rem;">
+            <thead>
+              <tr style="background:var(--paper);">
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">Skin Type</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">Accuracy (%)</th>
+                <th style="padding:8px 12px;text-align:left;font-size:0.72rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);">False Positive Rate (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% const skinRows=[['I','Pale White','#f6ede4'],['II','White','#e8c9a5'],['III','Light Brown','#c8924a'],['IV','Brown','#a0622a'],['V','Dark Brown','#6b3c1a'],['VI','Very Dark','#2d1506']]; skinRows.forEach(row => { %>
+              <tr style="border-top:1px solid var(--border);">
+                <td style="padding:10px 12px;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="width:14px;height:14px;border-radius:50%;background:<%= row[2] %>;border:1px solid rgba(0,0,0,0.1);flex-shrink:0;"></span>
+                    <span style="font-weight:500;">Type <%= row[0] %></span>
+                    <span style="font-size:0.78rem;color:var(--text-light);"><%= row[1] %></span>
+                  </div>
+                </td>
+                <td style="padding:10px 12px;"><input type="number" name="skinAcc<%= row[0] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+                <td style="padding:10px 12px;"><input type="number" name="skinFpr<%= row[0] %>" class="form-control" style="width:100px;" placeholder="0.0" min="0" max="100" step="0.1" data-percent></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lighting Metrics -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-body">
+        <div class="form-section-title">💡 Metrics by Lighting Condition</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div>
+            <div style="font-weight:500;margin-bottom:12px;font-size:0.875rem;">☀️ Bright Lighting</div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label" for="lightAccBright">Accuracy (%)</label><input type="number" id="lightAccBright" name="lightAccBright" class="form-control" placeholder="0.0" min="0" max="100" step="0.1" data-percent></div>
+              <div class="form-group"><label class="form-label" for="lightFprBright">FPR (%)</label><input type="number" id="lightFprBright" name="lightFprBright" class="form-control" placeholder="0.0" min="0" max="100" step="0.1" data-percent></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:500;margin-bottom:12px;font-size:0.875rem;">🌑 Dark Lighting</div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label" for="lightAccDark">Accuracy (%)</label><input type="number" id="lightAccDark" name="lightAccDark" class="form-control" placeholder="0.0" min="0" max="100" step="0.1" data-percent></div>
+              <div class="form-group"><label class="form-label" for="lightFprDark">FPR (%)</label><input type="number" id="lightFprDark" name="lightFprDark" class="form-control" placeholder="0.0" min="0" max="100" step="0.1" data-percent></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;">
+      <button type="submit" class="btn btn-teal btn-lg">🔬 Submit Evaluation</button>
+      <a href="/datasets/<%= dataset._id %>" class="btn btn-outline btn-lg">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/layout_end') %>

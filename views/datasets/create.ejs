@@ -1,0 +1,231 @@
+<%- include('../partials/layout_start') %>
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Upload Dataset</h1>
+    <div class="page-breadcrumb">
+      <a href="/dashboard">Dashboard</a> › <a href="/datasets">Datasets</a> › <span>Upload</span>
+    </div>
+  </div>
+  <a href="/datasets" class="btn btn-outline">← Back</a>
+</div>
+
+<div style="max-width: 860px;">
+  <form action="/datasets" method="POST" enctype="multipart/form-data" data-loading>
+
+    <!-- Basic Info -->
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="card-body">
+        <div class="form-section-title">📄 Research Paper Information</div>
+
+        <div class="form-group">
+          <label class="form-label required" for="title">Dataset / Paper Title</label>
+          <input type="text" id="title" name="title" class="form-control"
+            placeholder="e.g., Towards Measuring Fairness in AI: The Casual Conversations Dataset"
+            required maxlength="200">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required" for="authors">Authors</label>
+          <input type="text" id="authors" name="authors" class="form-control"
+            placeholder="e.g., Hazirbas, C., Bitton, J., Dolhansky, B., et al."
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required" for="abstract">Abstract</label>
+          <textarea id="abstract" name="abstract" class="form-control" rows="5"
+            placeholder="Provide the paper abstract or dataset description..." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label required" for="publicationYear">Publication Year</label>
+            <input type="number" id="publicationYear" name="publicationYear" class="form-control"
+              placeholder="2022" min="1990" max="<%= new Date().getFullYear() + 1 %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required" for="datasetSize">Dataset Size (samples)</label>
+            <input type="number" id="datasetSize" name="datasetSize" class="form-control"
+              placeholder="e.g., 45186" min="1" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="tags">Tags (comma-separated)</label>
+            <input type="text" id="tags" name="tags" class="form-control"
+              placeholder="deepfake, fairness, skin tone, age">
+            <div class="form-hint">Separate tags with commas</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="status">Status</label>
+            <select id="status" name="status" class="form-control">
+              <option value="active">Active</option>
+              <option value="under_review">Under Review</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Distribution Data -->
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="card-body">
+        <div class="form-section-title">📊 Fairness Distribution Annotations</div>
+        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:20px;">
+          Enter percentage distributions for each fairness dimension (values should sum to ~100%).
+        </p>
+
+        <!-- Age -->
+        <div class="form-section-title" style="font-size:0.9rem; border-bottom-style:dashed; color:var(--text-mid);">Age Groups</div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label" for="age18_30">18–30 (%)</label>
+            <input type="number" id="age18_30" name="age18_30" class="form-control"
+              placeholder="35.6" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="age31_45">31–45 (%)</label>
+            <input type="number" id="age31_45" name="age31_45" class="form-control"
+              placeholder="32.5" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="age46_85">46–85 (%)</label>
+            <input type="number" id="age46_85" name="age46_85" class="form-control"
+              placeholder="29.8" min="0" max="100" step="0.1" data-percent>
+          </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="form-section-title" style="font-size:0.9rem; border-bottom-style:dashed; color:var(--text-mid); margin-top:8px;">Gender Distribution</div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label" for="genderMale">Male (%)</label>
+            <input type="number" id="genderMale" name="genderMale" class="form-control"
+              placeholder="43.4" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="genderFemale">Female (%)</label>
+            <input type="number" id="genderFemale" name="genderFemale" class="form-control"
+              placeholder="54.5" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="genderOther">Other (%)</label>
+            <input type="number" id="genderOther" name="genderOther" class="form-control"
+              placeholder="2.1" min="0" max="100" step="0.1" data-percent>
+          </div>
+        </div>
+
+        <!-- Skin Tone -->
+        <div class="form-section-title" style="font-size:0.9rem; border-bottom-style:dashed; color:var(--text-mid); margin-top:8px;">
+          Fitzpatrick Skin Tone Distribution
+          <div class="skin-swatches" style="margin-left:8px;">
+            <span class="skin-dot skin-I" title="Type I"></span>
+            <span class="skin-dot skin-II" title="Type II"></span>
+            <span class="skin-dot skin-III" title="Type III"></span>
+            <span class="skin-dot skin-IV" title="Type IV"></span>
+            <span class="skin-dot skin-V" title="Type V"></span>
+            <span class="skin-dot skin-VI" title="Type VI"></span>
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label" for="skinTypeI">
+              <span class="skin-dot skin-I" style="display:inline-block; vertical-align:middle;"></span>
+              Type I – Pale White (%)
+            </label>
+            <input type="number" id="skinTypeI" name="skinTypeI" class="form-control"
+              placeholder="4.0" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skinTypeII">
+              <span class="skin-dot skin-II" style="display:inline-block; vertical-align:middle;"></span>
+              Type II – White (%)
+            </label>
+            <input type="number" id="skinTypeII" name="skinTypeII" class="form-control"
+              placeholder="28.3" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skinTypeIII">
+              <span class="skin-dot skin-III" style="display:inline-block; vertical-align:middle;"></span>
+              Type III – Light Brown (%)
+            </label>
+            <input type="number" id="skinTypeIII" name="skinTypeIII" class="form-control"
+              placeholder="22.9" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skinTypeIV">
+              <span class="skin-dot skin-IV" style="display:inline-block; vertical-align:middle;"></span>
+              Type IV – Brown (%)
+            </label>
+            <input type="number" id="skinTypeIV" name="skinTypeIV" class="form-control"
+              placeholder="8.4" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skinTypeV">
+              <span class="skin-dot skin-V" style="display:inline-block; vertical-align:middle;"></span>
+              Type V – Dark Brown (%)
+            </label>
+            <input type="number" id="skinTypeV" name="skinTypeV" class="form-control"
+              placeholder="15.8" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skinTypeVI">
+              <span class="skin-dot skin-VI" style="display:inline-block; vertical-align:middle;"></span>
+              Type VI – Very Dark (%)
+            </label>
+            <input type="number" id="skinTypeVI" name="skinTypeVI" class="form-control"
+              placeholder="20.7" min="0" max="100" step="0.1" data-percent>
+          </div>
+        </div>
+
+        <!-- Lighting -->
+        <div class="form-section-title" style="font-size:0.9rem; border-bottom-style:dashed; color:var(--text-mid); margin-top:8px;">Lighting Conditions</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="lightBright">☀️ Bright (%)</label>
+            <input type="number" id="lightBright" name="lightBright" class="form-control"
+              placeholder="85.1" min="0" max="100" step="0.1" data-percent>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lightDark">🌑 Dark (%)</label>
+            <input type="number" id="lightDark" name="lightDark" class="form-control"
+              placeholder="14.9" min="0" max="100" step="0.1" data-percent>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Uploads -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-body">
+        <div class="form-section-title">📎 File Uploads</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="paperFile">Research Paper (PDF)</label>
+            <input type="file" id="paperFile" name="paperFile" class="form-control-file"
+              accept=".pdf" aria-describedby="paperHint">
+            <div class="form-hint" id="paperHint">Max 100MB · PDF format</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="datasetFile">Dataset File (ZIP / CSV / JSON)</label>
+            <input type="file" id="datasetFile" name="datasetFile" class="form-control-file"
+              accept=".zip,.csv,.json" aria-describedby="dataHint">
+            <div class="form-hint" id="dataHint">Max 100MB · ZIP, CSV, or JSON</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button type="submit" class="btn btn-teal btn-lg">
+        📤 Upload Dataset
+      </button>
+      <a href="/datasets" class="btn btn-outline btn-lg">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/layout_end') %>

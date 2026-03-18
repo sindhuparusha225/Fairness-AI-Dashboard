@@ -1,0 +1,163 @@
+<%- include('../partials/layout_start') %>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+  <div class="stat-card teal">
+    <div class="stat-icon">🗄️</div>
+    <div class="stat-value"><%= stats.totalDatasets.toLocaleString() %></div>
+    <div class="stat-label">Total Datasets</div>
+  </div>
+  <div class="stat-card ink">
+    <div class="stat-icon">👥</div>
+    <div class="stat-value"><%= stats.totalResearchers.toLocaleString() %></div>
+    <div class="stat-label">Researchers</div>
+  </div>
+  <div class="stat-card amber">
+    <div class="stat-icon">🎬</div>
+    <div class="stat-value"><%= stats.totalSamples.toLocaleString() %></div>
+    <div class="stat-label">Total Samples</div>
+  </div>
+  <div class="stat-card rose">
+    <div class="stat-icon">🔬</div>
+    <div class="stat-value"><%= stats.totalEvaluations.toLocaleString() %></div>
+    <div class="stat-label">Evaluations</div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="charts-grid">
+  <div class="chart-card">
+    <div class="chart-label">📊 Samples by Age Group</div>
+    <div class="chart-container">
+      <canvas id="ageChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-label">⚥ Gender Distribution</div>
+    <div class="chart-container">
+      <canvas id="genderChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-label">🎨 Fitzpatrick Skin Tone Distribution</div>
+    <div class="chart-container">
+      <canvas id="skinChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-label">💡 Lighting Conditions</div>
+    <div class="chart-container">
+      <canvas id="lightingChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Data -->
+<div class="two-col-grid">
+
+  <!-- Recent Datasets -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Recent Datasets</h3>
+      <a href="/datasets" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div style="padding: 0;">
+      <% if (recentDatasets.length > 0) { %>
+        <% recentDatasets.forEach(ds => { %>
+          <div style="padding: 14px 20px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:500; font-size:0.875rem; color:var(--ink);">
+                <a href="/datasets/<%= ds._id %>" style="color:var(--ink);">
+                  <%= ds.title.length > 40 ? ds.title.substring(0, 40) + '...' : ds.title %>
+                </a>
+              </div>
+              <div style="font-size:0.77rem; color:var(--text-light); margin-top:2px;">
+                <%= ds.uploadedBy ? ds.uploadedBy.name : 'Unknown' %> · <%= ds.publicationYear %>
+              </div>
+            </div>
+            <span class="badge badge-<%= ds.status === 'active' ? 'active' : ds.status === 'archived' ? 'archived' : 'review' %>">
+              <%= ds.status %>
+            </span>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state" style="padding: 30px;">
+          <div class="empty-icon">🗄️</div>
+          <div class="empty-title">No datasets yet</div>
+          <a href="/datasets/new" class="btn btn-teal btn-sm" style="margin-top:12px;">Upload First Dataset</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Recent Evaluations -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Recent Evaluations</h3>
+    </div>
+    <div style="padding: 0;">
+      <% if (recentEvaluations.length > 0) { %>
+        <% recentEvaluations.forEach(ev => { %>
+          <div style="padding: 14px 20px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:500; font-size:0.875rem; color:var(--ink);">
+                <%= ev.modelName %>
+              </div>
+              <div style="font-size:0.77rem; color:var(--text-light); margin-top:2px;">
+                <%= ev.dataset ? ev.dataset.title.substring(0, 30) + (ev.dataset.title.length > 30 ? '...' : '') : 'Dataset' %>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span class="badge badge-<%= ev.status %>"><%= ev.status %></span>
+              <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--teal-dim); margin-top:4px;">
+                <%= ev.overallAccuracy.toFixed(1) %>% acc.
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state" style="padding: 30px;">
+          <div class="empty-icon">🔬</div>
+          <div class="empty-title">No evaluations yet</div>
+          <p style="font-size:0.82rem;">Upload a dataset and run a fairness analysis</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+</div>
+
+<!-- Paper Reference -->
+<div style="margin-top: 24px; padding: 20px 24px; background: var(--ink); border-radius: var(--radius-lg); display:flex; align-items:center; gap: 20px; flex-wrap: wrap;">
+  <div style="flex:1; min-width:200px;">
+    <div style="font-family:'DM Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--teal); margin-bottom:6px;">Reference Paper</div>
+    <div style="font-family:'DM Serif Display',serif; font-size:1.05rem; color:var(--white); margin-bottom:4px;">
+      Towards Measuring Fairness in AI: The Casual Conversations Dataset
+    </div>
+    <div style="font-size:0.8rem; color:rgba(255,255,255,0.45);">
+      Hazirbas et al. · IEEE TBIOM · Vol. 4, No. 3 · July 2022
+    </div>
+  </div>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <div style="text-align:center; padding: 12px 20px; background:rgba(255,255,255,0.06); border-radius:10px; border: 1px solid rgba(255,255,255,0.08);">
+      <div style="font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--teal);">4</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;">Dimensions</div>
+    </div>
+    <div style="text-align:center; padding: 12px 20px; background:rgba(255,255,255,0.06); border-radius:10px; border: 1px solid rgba(255,255,255,0.08);">
+      <div style="font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--amber);">6</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;">Skin Types</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('load', function () {
+    const chartData = <%- JSON.stringify(chartData) %>;
+    initDashboardCharts(chartData);
+  });
+</script>
+
+<%- include('../partials/layout_end') %>
