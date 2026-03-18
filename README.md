@@ -222,6 +222,27 @@ Based on the Casual Conversations Dataset paper, the platform evaluates across:
 
 ---
 
+## 📊 Interpreting Fairness Results
+
+This system highlights disparities across demographic groups, but interpretation is critical.
+
+For example:
+- A higher false positive rate for one group indicates potential bias
+- Differences in accuracy across groups may signal unfair model behavior
+- Trade-offs may exist between overall accuracy and fairness
+
+This dashboard helps identify such disparities, but further mitigation strategies 
+(e.g., reweighting, bias correction) are required to improve fairness.
+
+---
+
+Future Work:
+- Integrate fairness metrics like demographic parity and equalized odds
+- Add bias mitigation techniques
+- Support model comparison across fairness-performance trade-offs
+
+---
+
 ## License
 
 MIT
