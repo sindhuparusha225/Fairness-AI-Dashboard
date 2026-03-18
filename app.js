@@ -9,6 +9,11 @@ const sessionConfig = require('./config/session');
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.locals.title = res.locals.title || 'AI Fairness Evaluation Dashboard';
+  next();
+});
+
 // Connect to MongoDB
 connectDB();
 

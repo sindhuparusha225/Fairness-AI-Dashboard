@@ -5,65 +5,122 @@ const Evaluation = require('../models/Evaluation');
 
 // GET ALL DATASETS
 exports.index = async (req, res) => {
-  const datasets = await Dataset.find().populate('uploadedBy', 'name');
-  res.render('datasets/index', { datasets });
+  try {
+    const datasets = await Dataset.find().populate('uploadedBy', 'name');
+
+    res.render('datasets/index', {
+  title: 'Datasets',
+  datasets,
+  search: '',
+  statusFilter: '',
+  yearFilter: ''
+});
+  } catch (err) {
+    console.error(err);
+    res.redirect('/dashboard');
+  }
 };
 
 // NEW FORM
 exports.newForm = (req, res) => {
-  res.render('datasets/new');
+  res.render('datasets/create', {
+    title: 'New Dataset'
+  });
 };
 
 // CREATE
 exports.create = async (req, res) => {
-  const dataset = new Dataset({
-    ...req.body,
-    uploadedBy: req.user._id,
-  });
+  try {
+    const dataset = new Dataset({
+      ...req.body,
+      uploadedBy: req.user._id,
+    });
 
-  await dataset.save();
-  req.flash('success_msg', 'Dataset created');
-  res.redirect('/datasets');
+    await dataset.save();
+    req.flash('success_msg', 'Dataset created');
+    res.redirect('/datasets');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/datasets');
+  }
 };
 
 // SHOW
 exports.show = async (req, res) => {
-  const dataset = await Dataset.findById(req.params.id)
-    .populate('uploadedBy', 'name');
+  try {
+    const dataset = await Dataset.findById(req.params.id)
+      .populate('uploadedBy', 'name');
 
-  res.render('datasets/show', { dataset });
+    res.render('datasets/show', {
+      title: 'Dataset Details',
+      dataset
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/datasets');
+  }
 };
 
 // EDIT FORM
 exports.editForm = async (req, res) => {
-  const dataset = await Dataset.findById(req.params.id);
-  res.render('datasets/edit', { dataset });
+  try {
+    const dataset = await Dataset.findById(req.params.id);
+
+    res.render('datasets/edit', {
+      title: 'Edit Dataset',
+      dataset
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/datasets');
+  }
 };
 
 // UPDATE
 exports.update = async (req, res) => {
-  await Dataset.findByIdAndUpdate(req.params.id, req.body);
-  req.flash('success_msg', 'Dataset updated');
-  res.redirect(`/datasets/${req.params.id}`);
+  try {
+    await Dataset.findByIdAndUpdate(req.params.id, req.body);
+
+    req.flash('success_msg', 'Dataset updated');
+    res.redirect(`/datasets/${req.params.id}`);
+  } catch (err) {
+    console.error(err);
+    res.redirect('/datasets');
+  }
 };
 
 // DELETE
 exports.destroy = async (req, res) => {
-  await Dataset.findByIdAndDelete(req.params.id);
-  req.flash('success_msg', 'Dataset deleted');
-  res.redirect('/datasets');
+  try {
+    await Dataset.findByIdAndDelete(req.params.id);
+
+    req.flash('success_msg', 'Dataset deleted');
+    res.redirect('/datasets');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/datasets');
+  }
 };
 
 // ================= EVALUATION =================
 
 // SHOW FORM
 exports.newEvaluationForm = async (req, res) => {
-  const dataset = await Dataset.findById(req.params.id);
-  res.render('datasets/evaluation', { dataset });
+  try {
+    const dataset = await Dataset.findById(req.params.id);
+
+    res.render('datasets/evaluation', {
+      title: 'Add Evaluation',
+      dataset
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/datasets');
+  }
 };
 
 // ADD EVALUATION
-exports.addEvaluation = async (req, res) => {
+exports.createEvaluation = async (req, res) => {
   try {
     await Evaluation.create({
       title: req.body.title,
@@ -107,30 +164,12 @@ exports.addEvaluation = async (req, res) => {
       },
 
       skinToneMetrics: {
-        typeI: {
-          accuracy: Number(req.body.skinAccI) || 0,
-          falsePositiveRate: Number(req.body.skinFprI) || 0,
-        },
-        typeII: {
-          accuracy: Number(req.body.skinAccII) || 0,
-          falsePositiveRate: Number(req.body.skinFprII) || 0,
-        },
-        typeIII: {
-          accuracy: Number(req.body.skinAccIII) || 0,
-          falsePositiveRate: Number(req.body.skinFprIII) || 0,
-        },
-        typeIV: {
-          accuracy: Number(req.body.skinAccIV) || 0,
-          falsePositiveRate: Number(req.body.skinFprIV) || 0,
-        },
-        typeV: {
-          accuracy: Number(req.body.skinAccV) || 0,
-          falsePositiveRate: Number(req.body.skinFprV) || 0,
-        },
-        typeVI: {
-          accuracy: Number(req.body.skinAccVI) || 0,
-          falsePositiveRate: Number(req.body.skinFprVI) || 0,
-        },
+        typeI: { accuracy: Number(req.body.skinAccI) || 0, falsePositiveRate: Number(req.body.skinFprI) || 0 },
+        typeII: { accuracy: Number(req.body.skinAccII) || 0, falsePositiveRate: Number(req.body.skinFprII) || 0 },
+        typeIII: { accuracy: Number(req.body.skinAccIII) || 0, falsePositiveRate: Number(req.body.skinFprIII) || 0 },
+        typeIV: { accuracy: Number(req.body.skinAccIV) || 0, falsePositiveRate: Number(req.body.skinFprIV) || 0 },
+        typeV: { accuracy: Number(req.body.skinAccV) || 0, falsePositiveRate: Number(req.body.skinFprV) || 0 },
+        typeVI: { accuracy: Number(req.body.skinAccVI) || 0, falsePositiveRate: Number(req.body.skinFprVI) || 0 },
       },
 
       lightingMetrics: {

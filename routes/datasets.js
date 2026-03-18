@@ -36,6 +36,5 @@ router.delete('/:id', isAuthenticated, datasetController.destroy);
 
 // 🔥 IMPORTANT FIX
 router.get('/:id/evaluations/new', isAuthenticated, datasetController.newEvaluationForm);
-router.post('/:id/evaluations', isAuthenticated, datasetController.addEvaluation);
-
+router.post('/:id/evaluations', isAuthenticated, datasetController.createEvaluation);
 module.exports = router;
