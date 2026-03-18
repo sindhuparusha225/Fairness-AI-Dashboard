@@ -1,4 +1,4 @@
-# FairnessAI Research Management Platform
+AI Fairness Evaluation Dashboard
 
 A full-stack system designed to **analyze, quantify, and visualize bias in AI models across demographic dimensions**.
 
@@ -233,6 +233,25 @@ For example:
 
 This dashboard helps identify such disparities, but further mitigation strategies 
 (e.g., reweighting, bias correction) are required to improve fairness.
+
+---
+
+## 📌 Example Insight
+
+For instance, if a model shows:
+- 85% accuracy for ages 18–30
+- 60% accuracy for ages 46–85
+
+This indicates a performance disparity, suggesting the model is less reliable for older individuals.
+
+Such insights help identify bias patterns that are not visible from overall accuracy alone.
+
+---
+
+## ⚠️ Limitation
+
+Currently, fairness metrics are manually entered and visualized.
+Future improvements would include automated metric computation from real model predictions.
 
 ---
 
