@@ -1,4 +1,5 @@
-AI Fairness Evaluation Dashboard
+#AI Fairness Evaluation Dashboard
+This project focuses on evaluating fairness in machine learning models by analyzing prediction bias across different groups.
 
 A full-stack system designed to **analyze, quantify, and visualize bias in AI models across demographic dimensions**.
 
