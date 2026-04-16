@@ -1,4 +1,8 @@
-#AI Fairness Evaluation Dashboard
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![Database](https://img.shields.io/badge/Database-MongoDB-brightgreen)
+![AI](https://img.shields.io/badge/AI-Fairness-blueviolet)
+![Frontend](https://img.shields.io/badge/Frontend-EJS%20%7C%20Chart.js-orange)
+# **AI Fairness Evaluation Dashboard**
 This project focuses on evaluating fairness in machine learning models by analyzing prediction bias across different groups.
 
 A full-stack system designed to **analyze, quantify, and visualize bias in AI models across demographic dimensions**.
@@ -18,6 +22,14 @@ This platform highlights that gap by:
 * Visualizing fairness issues using aggregated analytics
 
 👉 The goal: **Make bias visible, measurable, and actionable**
+
+---
+
+## Why This Matters
+
+Bias in AI systems can lead to unfair outcomes in areas like healthcare, hiring, and decision-making.
+
+This platform helps identify such biases early, making AI systems more transparent and accountable.
 
 ---
 
@@ -249,10 +261,9 @@ Such insights help identify bias patterns that are not visible from overall accu
 
 ---
 
-## ⚠️ Limitation
-
-Currently, fairness metrics are manually entered and visualized.
-Future improvements would include automated metric computation from real model predictions.
+## Limitations
+- Fairness metrics are currently manually entered instead of computed directly from model predictions
+- Bias mitigation techniques are not yet integrated
 
 ---
 
@@ -260,6 +271,13 @@ Future Work:
 - Integrate fairness metrics like demographic parity and equalized odds
 - Add bias mitigation techniques
 - Support model comparison across fairness-performance trade-offs
+
+---
+
+## Contribution
+- Designed and built the complete system independently
+- Developed backend using Node.js and MongoDB
+- Implemented fairness evaluation logic and analytics dashboard
 
 ---
 
