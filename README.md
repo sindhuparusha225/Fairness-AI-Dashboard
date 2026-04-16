@@ -1,8 +1,8 @@
-![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-green)
 ![Database](https://img.shields.io/badge/Database-MongoDB-brightgreen)
 ![AI](https://img.shields.io/badge/AI-Fairness-blueviolet)
 ![Frontend](https://img.shields.io/badge/Frontend-EJS%20%7C%20Chart.js-orange)
-# **AI Fairness Evaluation Dashboard**
+# AI Fairness Evaluation Dashboard
 This project focuses on evaluating fairness in machine learning models by analyzing prediction bias across different groups.
 
 A full-stack system designed to **analyze, quantify, and visualize bias in AI models across demographic dimensions**.
@@ -45,7 +45,17 @@ This platform helps identify such biases early, making AI systems more transpare
 
 <img width="1915" height="1019" alt="Screenshot 2026-03-18 142700" src="https://github.com/user-attachments/assets/4fcc9816-86ef-43f8-a86f-f64cf9903919" />
 
+---
 
+## System Flow
+
+1. Upload dataset
+2. Perform evaluation
+3. Store results in MongoDB
+4. Analyze bias across demographic groups
+5. Visualize disparities using charts
+
+---
 
 ## 🧠 What This Demonstrates
 
@@ -54,6 +64,23 @@ This platform helps identify such biases early, making AI systems more transpare
 * Full-stack engineering (Node.js, MongoDB, EJS)
 * Translating research ideas → working product
 
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Runtime | Node.js |
+| Framework | Express.js |
+| Database | MongoDB + Mongoose |
+| View Engine | EJS |
+| Auth | express-session + connect-mongo |
+| Password hashing | bcryptjs |
+| File uploads | multer |
+| Charts | Chart.js 4 (CDN) |
+| Fonts | DM Serif Display + DM Mono + DM Sans |
+
+---
 
 ## Quick Start
 
@@ -100,22 +127,6 @@ npm run dev
 ```
 
 Visit: [http://localhost:3000](http://localhost:3000)
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Runtime | Node.js |
-| Framework | Express.js |
-| Database | MongoDB + Mongoose |
-| View Engine | EJS |
-| Auth | express-session + connect-mongo |
-| Password hashing | bcryptjs |
-| File uploads | multer |
-| Charts | Chart.js 4 (CDN) |
-| Fonts | DM Serif Display + DM Mono + DM Sans |
 
 ---
 
@@ -262,8 +273,8 @@ Such insights help identify bias patterns that are not visible from overall accu
 ---
 
 ## Limitations
-- Fairness metrics are currently manually entered instead of computed directly from model predictions
-- Bias mitigation techniques are not yet integrated
+- Fairness metrics are manually entered rather than derived from model predictions
+- Does not currently include automated bias mitigation techniques
 
 ---
 
